@@ -95,21 +95,6 @@ namespace GoogleImageShell
             // just load the bytes from disk directly
             return File.ReadAllBytes(imagePath);
         }
-
-        /// <summary>
-        /// Converts a byte array into base-64 format, using
-        /// a format compatible with Google Images.
-        /// </summary>
-        /// <param name="content">Raw bytes to encode</param>
-        /// <returns>Base-64 encoded string</returns>
-        private static string BinaryToBase64Compat(byte[] content)
-        {
-            // Uploaded image needs to be encoded in base-64,
-            // with `+` replaced by `-` and `/` replaced by `_`
-            string base64 = Convert.ToBase64String(content).Replace('+', '-').Replace('/', '_');
-            return base64;
-        }
-
         /// <summary>
         /// Asynchronously uploads the specified image to Google Images,
         /// and returns the URL of the results page.
@@ -121,31 +106,44 @@ namespace GoogleImageShell
         /// <returns>String containing the URL of the results page</returns>
         public static async Task<string> Search(string imagePath, bool includeFileName, bool resizeOnUpload, CancellationToken cancelToken)
         {
-            // Load the image, resizing it if necessary
-            byte[] data = LoadImageData(imagePath, resizeOnUpload);
+            // Load the image data from the provided file path
+            byte[] imageData;
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                imageData = LoadImageData(imagePath, resizeOnUpload);
+            }
+            else
+            {
+                throw new ArgumentException("Either imagePath or imageUrl must be provided");
+            }
 
-            // Prevent auto redirect (we want to open the
-            // redirect destination directly in the browser)
+            // Configure the HTTP client to prevent auto-redirects
             var handler = new HttpClientHandler();
             handler.AllowAutoRedirect = false;
-
+            
+            // Create the multipart form data with the image data and other required fields
             using (var client = new HttpClient(handler))
             {
                 var form = new MultipartFormDataContentCompat();
-                form.Add(new StringContent(BinaryToBase64Compat(data)), "image_content");
-                if (includeFileName)
+                form.Add(new ByteArrayContent(imageData), "encoded_image", Path.GetFileName(imagePath));
+                if (includeFileName && !string.IsNullOrEmpty(imagePath))
                 {
                     form.Add(new StringContent(Path.GetFileName(imagePath)), "filename");
                 }
-                var response = await client.PostAsync("https://images.google.com/searchbyimage/upload", form, cancelToken);
+                form.Add(new StringContent("Google Chrome 107.0.5304.107 (Official) Windows"), "sbisrc");
+
+                // Send the POST request to upload the image and get the search results URL
+                var response = await client.PostAsync("https://www.google.com/searchbyimage/upload", form, cancelToken);
+                // Console.WriteLine(response);
                 if (response.StatusCode != HttpStatusCode.Redirect)
                 {
                     throw new IOException("Expected redirect to results page, got " + (int)response.StatusCode);
                 }
-                string resultUrl = response.Headers.Location.ToString();
+                var resultUrl = response.Headers.Location.ToString();
                 return resultUrl;
             }
         }
+
 
         /// <summary>
         /// Google Images has some oddities in the way it requires
