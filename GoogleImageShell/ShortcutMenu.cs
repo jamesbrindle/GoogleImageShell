@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace GoogleImageShell
@@ -75,6 +76,7 @@ namespace GoogleImageShell
                     {
                         verbKey.SetValue("", menuText);
                         cmdKey.SetValue("", command);
+                        verbKey.SetValue("Icon", Process.GetCurrentProcess().MainModule.FileName);
                     }
                 }
             }

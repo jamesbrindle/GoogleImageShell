@@ -134,7 +134,9 @@ namespace GoogleImageShell
 
                 // Send the POST request to upload the image and get the search results URL
                 var response = await client.PostAsync("https://www.google.com/searchbyimage/upload", form, cancelToken);
-                // Console.WriteLine(response);
+#if DEBUG
+                Console.WriteLine(response);
+#endif
                 if (response.StatusCode != HttpStatusCode.Redirect)
                 {
                     throw new IOException("Expected redirect to results page, got " + (int)response.StatusCode);

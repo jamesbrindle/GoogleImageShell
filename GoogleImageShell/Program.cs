@@ -4,26 +4,32 @@ using System.Windows.Forms;
 
 namespace GoogleImageShell
 {
+    public static class Imports
+    {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool AllocConsole();
+    }
+    
     public static class Program
     {
         [STAThread]
         public static void Main(string[] args)
         {
-            
-            [DllImport("kernel32.dll", SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            static extern bool AllocConsole();
-            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if (args.Length >= 1 && args[0].ToLower() == "search")
             {
-                // AllocConsole();
+#if DEBUG
+                Imports.AllocConsole();
+#endif
                 Application.Run(new UploadForm(args));
             }
             else
             {
-                // AllocConsole();
+#if DEBUG
+                Imports.AllocConsole();
+#endif
                 Application.Run(new ConfigForm());
             }
         }
