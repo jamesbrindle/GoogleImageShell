@@ -2,12 +2,12 @@
 
 Search Google Images from the comfort of Windows Explorer!
 
-![Screenshot](http://i.imgur.com/1P4nb0P.png)
+![FileExplorer](Images/ContextMenu.png)
 
 ## Requirements
 
 - Windows 7 or above
-- .NET 4.6.1
+- .NET 4.8.1
 
 ## Installation
 
@@ -31,6 +31,13 @@ functioning!
 - BMP
 
 ## License
+
+## In-Application Icons ##
+
+In-Application Icons
+By [Icons8](https://icons8.com)
+
+## Distribution ##
 
 Distributed under the [MIT License](http://opensource.org/licenses/MIT).
 
