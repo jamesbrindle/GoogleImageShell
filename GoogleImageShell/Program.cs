@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace GoogleImageShell
 {
+#if DEBUG
     public static class Imports
     {
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool AllocConsole();
     }
+#endif
     
     public static class Program
     {
