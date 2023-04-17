@@ -14,9 +14,9 @@ namespace GoogleImageShell
 
         private void ConfigForm_Load(object sender, EventArgs e)
         {
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
             Text += $" v{version.Major}.{version.Minor}.{version.Build}";
-            foreach (object type in Enum.GetValues(typeof(ImageFileType)))
+            foreach (var type in Enum.GetValues(typeof(ImageFileType)))
             {
                 fileTypeListBox.Items.Add(type, true);
             }
@@ -24,18 +24,18 @@ namespace GoogleImageShell
 
         private void installButton_Click(object sender, EventArgs e)
         {
-            string menuText = menuTextTextBox.Text;
-            bool includeFileName = includeFileNameCheckBox.Checked;
-            bool allUsers = allUsersCheckBox.Checked;
-            bool resizeOnUpload = resizeOnUploadCheckbox.Checked;
-            ImageFileType[] types = fileTypeListBox.CheckedItems.Cast<ImageFileType>().ToArray();
+            var menuText = menuTextTextBox.Text;
+            var includeFileName = includeFileNameCheckBox.Checked;
+            var allUsers = allUsersCheckBox.Checked;
+            var resizeOnUpload = resizeOnUploadCheckbox.Checked;
+            var types = fileTypeListBox.CheckedItems.Cast<ImageFileType>().ToArray();
             Install(menuText, includeFileName, allUsers, resizeOnUpload, types);
         }
 
         private void uninstallButton_Click(object sender, EventArgs e)
         {
-            bool allUsers = allUsersCheckBox.Checked;
-            ImageFileType[] types = fileTypeListBox.CheckedItems.Cast<ImageFileType>().ToArray();
+            var allUsers = allUsersCheckBox.Checked;
+            var types = fileTypeListBox.CheckedItems.Cast<ImageFileType>().ToArray();
             Uninstall(allUsers, types);
         }
 

@@ -29,11 +29,11 @@ namespace GoogleImageShell
             // ratioMin is used to prevent the image from getting too small.
             // Note that ratioMax is calculated on the LARGER image dimension,
             // whereas ratioMin is calculated on the SMALLER image dimension.
-            int origW = originalSize.Width;
-            int origH = originalSize.Height;
-            double ratioMax = Math.Min(MaxImageDimension / (double)origW, MaxImageDimension / (double)origH);
-            double ratioMin = Math.Max(MinImageDimension / (double)origW, MinImageDimension / (double)origH);
-            double ratio = Math.Max(ratioMax, ratioMin);
+            var origW = originalSize.Width;
+            var origH = originalSize.Height;
+            var ratioMax = Math.Min(MaxImageDimension / (double)origW, MaxImageDimension / (double)origH);
+            var ratioMin = Math.Max(MinImageDimension / (double)origW, MinImageDimension / (double)origH);
+            var ratio = Math.Max(ratioMax, ratioMin);
 
             // If resizing it would make it bigger, then don't bother
             if (ratio >= 1)
@@ -42,8 +42,8 @@ namespace GoogleImageShell
                 return false;
             }
 
-            int newW = (int)(origW * ratio);
-            int newH = (int)(origH * ratio);
+            var newW = (int)(origW * ratio);
+            var newH = (int)(origH * ratio);
             newSize = new Size(newW, newH);
             return true;
         }
@@ -62,13 +62,13 @@ namespace GoogleImageShell
             {
                 try
                 {
-                    using (Bitmap bmp = new Bitmap(imagePath))
+                    using (var bmp = new Bitmap(imagePath))
                     {
-                        if (ShouldResize(bmp.Size, out Size newSize))
+                        if (ShouldResize(bmp.Size, out var newSize))
                         {
                             using (var newBmp = new Bitmap(newSize.Width, newSize.Height))
                             {
-                                using (Graphics g = Graphics.FromImage(newBmp))
+                                using (var g = Graphics.FromImage(newBmp))
                                 {
                                     g.DrawImage(bmp, new Rectangle(0, 0, newSize.Width, newSize.Height));
                                 }

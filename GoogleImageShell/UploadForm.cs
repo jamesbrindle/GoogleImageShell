@@ -17,9 +17,9 @@ namespace GoogleImageShell
         public UploadForm(string[] args)
         {
             InitializeComponent();
-            for (int i = 1; i < args.Length; ++i)
+            for (var i = 1; i < args.Length; ++i)
             {
-                string arg = args[i];
+                var arg = args[i];
                 switch (arg)
                 {
                     case "-n":
@@ -41,7 +41,7 @@ namespace GoogleImageShell
             Log("Include file name: " + _includeFileName);
             Log("Resize on upload: " + _resizeOnUpload);
 
-            Task<string> task = GoogleImages.Search(_imagePath, _includeFileName, _resizeOnUpload, _cancelTokenSource.Token);
+            var task = GoogleImages.Search(_imagePath, _includeFileName, _resizeOnUpload, _cancelTokenSource.Token);
             task.ContinueWith(OnUploadComplete, TaskScheduler.FromCurrentSynchronizationContext());
         }
 

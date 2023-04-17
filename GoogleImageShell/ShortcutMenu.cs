@@ -27,8 +27,8 @@ namespace GoogleImageShell
         /// <returns>The shell command string</returns>
         private static string CreateProgramCommand(bool includeFileName, bool resizeOnUpload)
         {
-            string exePath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
-            string command = exePath + " search \"%1\"";
+            var exePath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+            var command = exePath + " search \"%1\"";
             if (includeFileName)
             {
                 command += " -n";
@@ -49,9 +49,9 @@ namespace GoogleImageShell
         /// <returns>Registry key object for the specified user/file type</returns>
         private static RegistryKey GetShellKey(bool allUsers, string fileType)
         {
-            RegistryKey hiveKey = allUsers ? Registry.LocalMachine : Registry.CurrentUser;
-            string shellPath = string.Format(ShellKeyPathFormat, fileType);
-            RegistryKey shellKey = hiveKey.CreateSubKey(shellPath);
+            var hiveKey = allUsers ? Registry.LocalMachine : Registry.CurrentUser;
+            var shellPath = string.Format(ShellKeyPathFormat, fileType);
+            var shellKey = hiveKey.CreateSubKey(shellPath);
             return shellKey;
         }
 
@@ -65,14 +65,14 @@ namespace GoogleImageShell
         /// <param name="types">Image file types to install the handler for</param>
         public static void InstallHandler(string menuText, bool includeFileName, bool allUsers, bool resizeOnUpload, ImageFileType[] types)
         {
-            string command = CreateProgramCommand(includeFileName, resizeOnUpload);
-            foreach (ImageFileType fileType in types)
+            var command = CreateProgramCommand(includeFileName, resizeOnUpload);
+            foreach (var fileType in types)
             {
-                foreach (string typeExt in FileTypeMap[fileType])
+                foreach (var typeExt in FileTypeMap[fileType])
                 {
-                    using (RegistryKey shellKey = GetShellKey(allUsers, typeExt))
-                    using (RegistryKey verbKey = shellKey.CreateSubKey(VerbName))
-                    using (RegistryKey cmdKey = verbKey.CreateSubKey(CommandKey))
+                    using (var shellKey = GetShellKey(allUsers, typeExt))
+                    using (var verbKey = shellKey.CreateSubKey(VerbName))
+                    using (var cmdKey = verbKey.CreateSubKey(CommandKey))
                     {
                         verbKey.SetValue("", menuText);
                         cmdKey.SetValue("", command);
@@ -89,11 +89,11 @@ namespace GoogleImageShell
         /// <param name="types">Image file types to uninstall the handler for</param>
         public static void UninstallHandler(bool allUsers, ImageFileType[] types)
         {
-            foreach (ImageFileType fileType in types)
+            foreach (var fileType in types)
             {
-                foreach (string typeExt in FileTypeMap[fileType])
+                foreach (var typeExt in FileTypeMap[fileType])
                 {
-                    using (RegistryKey shellKey = GetShellKey(allUsers, typeExt))
+                    using (var shellKey = GetShellKey(allUsers, typeExt))
                     {
                         shellKey?.DeleteSubKeyTree(VerbName, false);
                     }
