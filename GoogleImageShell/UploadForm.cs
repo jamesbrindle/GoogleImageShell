@@ -57,26 +57,38 @@ namespace GoogleImageShell
 
         private void OnUploadComplete(Task<string> task)
         {
-            if (task.Status == TaskStatus.Faulted)
+            switch (task.Status)
             {
-                Log("Failed to upload image: " + task.Exception.InnerException);
-            }
-            else if (task.Status == TaskStatus.Canceled)
-            {
-                Log("Upload canceled by user");
-            }
-            else if (task.Status == TaskStatus.RanToCompletion)
-            {
-                Log("Image uploaded successfully, opening results page");
-                if (TryOpenBrowser(task))
+                case TaskStatus.Faulted:
+                    Log("Failed to upload image: " + task.Exception.InnerException);
+                    break;
+                case TaskStatus.Canceled:
+                    Log("Upload canceled by user");
+                    break;
+                case TaskStatus.RanToCompletion:
                 {
-                    Close();
-                    return;
+                    Log("Image uploaded successfully, opening results page");
+                    if (TryOpenBrowser(task))
+                    {
+                        Close();
+                        return;
+                    }
+
+                    break;
                 }
-            }
-            else
-            {
-                Log("Unexpected task result status: " + task.Status);
+                case TaskStatus.Created:
+                    break;
+                case TaskStatus.WaitingForActivation:
+                    break;
+                case TaskStatus.WaitingToRun:
+                    break;
+                case TaskStatus.Running:
+                    break;
+                case TaskStatus.WaitingForChildrenToComplete:
+                    break;
+                default:
+                    Log("Unexpected task result status: " + task.Status);
+                    break;
             }
             cancelButton.Text = "Close";
             progressBar.Style = ProgressBarStyle.Continuous;

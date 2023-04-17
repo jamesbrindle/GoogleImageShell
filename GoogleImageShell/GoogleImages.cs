@@ -58,37 +58,35 @@ namespace GoogleImageShell
         {
             // Resize the image if user enabled the option
             // and the image is reasonably large
-            if (resize)
+            if (!resize) return File.ReadAllBytes(imagePath);
+            try
             {
-                try
+                using (var bmp = new Bitmap(imagePath))
                 {
-                    using (var bmp = new Bitmap(imagePath))
+                    if (ShouldResize(bmp.Size, out var newSize))
                     {
-                        if (ShouldResize(bmp.Size, out var newSize))
+                        using (var newBmp = new Bitmap(newSize.Width, newSize.Height))
                         {
-                            using (var newBmp = new Bitmap(newSize.Width, newSize.Height))
+                            using (var g = Graphics.FromImage(newBmp))
                             {
-                                using (var g = Graphics.FromImage(newBmp))
-                                {
-                                    g.DrawImage(bmp, new Rectangle(0, 0, newSize.Width, newSize.Height));
-                                }
+                                g.DrawImage(bmp, new Rectangle(0, 0, newSize.Width, newSize.Height));
+                            }
 
-                                // Save as JPEG (format doesn't have to match file extension,
-                                // Google will take care of figuring out the correct format)
-                                using (var ms = new MemoryStream())
-                                {
-                                    newBmp.Save(ms, ImageFormat.Jpeg);
-                                    return ms.ToArray();
-                                }
+                            // Save as JPEG (format doesn't have to match file extension,
+                            // Google will take care of figuring out the correct format)
+                            using (var ms = new MemoryStream())
+                            {
+                                newBmp.Save(ms, ImageFormat.Jpeg);
+                                return ms.ToArray();
                             }
                         }
                     }
                 }
-                catch (Exception)
-                {
-                    // Ignore exceptions (out of memory, invalid format, etc)
-                    // and fall back to just reading the raw file bytes
-                }
+            }
+            catch (Exception)
+            {
+                // Ignore exceptions (out of memory, invalid format, etc)
+                // and fall back to just reading the raw file bytes
             }
 
             // No resizing required or image is too small,
