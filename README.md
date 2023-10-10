@@ -7,7 +7,7 @@ Search Google Images from the comfort of Windows Explorer!
 ## Requirements
 
 - Windows 7 or above
-- .NET 4.8.1
+- [.NET 4.8.1 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481)
 
 ## Installation
 
