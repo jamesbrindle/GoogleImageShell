@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -37,9 +38,14 @@ namespace GoogleImageShell
 
         private void UploadForm_Load(object sender, EventArgs e)
         {
-            Log("Uploading image: " + _imagePath);
-            Log("Include file name: " + _includeFileName);
-            Log("Resize on upload: " + _resizeOnUpload);
+            var sb = new StringBuilder();
+            sb.Append($"Uploading image: {_imagePath}\n");
+            sb.Append($"Include file name: {_includeFileName}\n");
+            sb.Append($"Resize on upload: {_resizeOnUpload}\n");
+#if DEBUG
+            Console.WriteLine(sb.ToString());
+#endif
+            Log(sb.ToString());
 
             var task = GoogleImages.Search(_imagePath, _includeFileName, _resizeOnUpload, _cancelTokenSource.Token);
             task.ContinueWith(OnUploadComplete, TaskScheduler.FromCurrentSynchronizationContext());
@@ -60,17 +66,33 @@ namespace GoogleImageShell
             switch (task.Status)
             {
                 case TaskStatus.Faulted:
+#if DEBUG
+                    Console.WriteLine("Failed to upload image: " + task.Exception.InnerException);
+#endif
                     Log("Failed to upload image: " + task.Exception.InnerException);
                     break;
                 case TaskStatus.Canceled:
+#if DEBUG
+                    Console.WriteLine("Upload canceled by user");
+#endif
                     Log("Upload canceled by user");
                     break;
                 case TaskStatus.RanToCompletion:
                 {
+#if DEBUG
+                    Console.WriteLine("Image uploaded successfully, opening results page");
+#endif
+
                     Log("Image uploaded successfully, opening results page");
                     if (TryOpenBrowser(task))
                     {
+#if !DEBUG
                         Close();
+#endif
+#if DEBUG
+                        Console.WriteLine("Debug compilation enabled form will remain open");
+                        Log("Debug compilation enabled form will remain open");
+#endif
                         return;
                     }
 
@@ -87,6 +109,9 @@ namespace GoogleImageShell
                 case TaskStatus.WaitingForChildrenToComplete:
                     break;
                 default:
+#if DEBUG
+                    Console.WriteLine("Unexpected task result status: " + task.Status);
+#endif
                     Log("Unexpected task result status: " + task.Status);
                     break;
             }
@@ -104,6 +129,9 @@ namespace GoogleImageShell
             }
             catch (Exception ex)
             {
+#if DEBUG
+                Console.WriteLine("Failed to open browser: " + ex);
+#endif
                 Log("Failed to open browser: " + ex);
                 return false;
             }

@@ -1,4 +1,8 @@
 ﻿using System;
+#if DEBUG
+using System.Runtime.InteropServices;
+#endif
+
 using System.Windows.Forms;
 
 namespace GoogleImageShell
