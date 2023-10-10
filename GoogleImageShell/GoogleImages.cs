@@ -122,18 +122,21 @@ namespace GoogleImageShell
             // Create the multipart form data with the image data and other required fields
             using (var client = new HttpClient(handler))
             {
+                client.Timeout = TimeSpan.FromSeconds(15);
                 var form = new MultipartFormDataContentCompat();
                 form.Add(new ByteArrayContent(imageData), "encoded_image", Path.GetFileName(imagePath));
                 if (includeFileName && !string.IsNullOrEmpty(imagePath))
                 {
                     form.Add(new StringContent(Path.GetFileName(imagePath)), "filename");
                 }
-                form.Add(new StringContent("Google Chrome 107.0.5304.107 (Official) Windows"), "sbisrc");
-
+                form.Add(new StringContent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"), "sbisrc");
+#if DEBUG
+                Console.WriteLine($"Sending out request with formdata");
+#endif
                 // Send the POST request to upload the image and get the search results URL
                 var response = await client.PostAsync("https://www.google.com/searchbyimage/upload", form, cancelToken);
 #if DEBUG
-                Console.WriteLine(response);
+                Console.WriteLine($"Response from async request\n{response}");
 #endif
                 if (response.StatusCode != HttpStatusCode.Redirect)
                 {
