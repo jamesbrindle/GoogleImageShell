@@ -16,7 +16,11 @@ namespace GoogleImageShell
             {ImageFileType.JPG, new[] {".jpg", ".jpe", ".jpeg", ".jfif"}},
             {ImageFileType.GIF, new[] {".gif"}},
             {ImageFileType.PNG, new[] {".png"}},
-            {ImageFileType.BMP, new[] {".bmp"}}
+            {ImageFileType.BMP, new[] {".bmp"}},
+            {ImageFileType.ICO, new[] {".ico"}},
+            {ImageFileType.WEBP, new[] {".webp"}},
+            {ImageFileType.WMF, new[] {".wmf"}},
+            {ImageFileType.TIFF, new[] {".tif", ".tiff" }}
         };
 
         /// <summary>

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UploadForm));
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.cancelButton = new System.Windows.Forms.Button();
             this.logTextBox = new System.Windows.Forms.TextBox();
@@ -35,17 +36,19 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(12, 176);
+            this.progressBar.Location = new System.Drawing.Point(16, 217);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(4);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(300, 23);
+            this.progressBar.Size = new System.Drawing.Size(400, 28);
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar.TabIndex = 0;
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(318, 176);
+            this.cancelButton.Location = new System.Drawing.Point(424, 217);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(104, 23);
+            this.cancelButton.Size = new System.Drawing.Size(139, 28);
             this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -53,26 +56,31 @@
             // 
             // logTextBox
             // 
-            this.logTextBox.Location = new System.Drawing.Point(12, 12);
+            this.logTextBox.Location = new System.Drawing.Point(16, 15);
+            this.logTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.logTextBox.Multiline = true;
             this.logTextBox.Name = "logTextBox";
             this.logTextBox.ReadOnly = true;
             this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.logTextBox.Size = new System.Drawing.Size(410, 158);
+            this.logTextBox.Size = new System.Drawing.Size(545, 194);
             this.logTextBox.TabIndex = 2;
             this.logTextBox.WordWrap = false;
             // 
             // UploadForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(434, 211);
+            this.ClientSize = new System.Drawing.Size(579, 260);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.progressBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(597, 307);
+            this.MinimumSize = new System.Drawing.Size(597, 307);
             this.Name = "UploadForm";
             this.ShowIcon = false;
             this.Text = "GoogleImageShell";

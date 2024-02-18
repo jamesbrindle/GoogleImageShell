@@ -18,9 +18,16 @@ namespace GoogleImageShell
     
     public static class Program
     {
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool SetProcessDPIAware();
+
+
         [STAThread]
         public static void Main(string[] args)
         {
+            if (Environment.OSVersion.Version.Major >= 6)
+                SetProcessDPIAware();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if (args.Length >= 1 && args[0].ToLower() == "search")

@@ -58,19 +58,21 @@ namespace GoogleImageShell
         {
             // Resize the image if user enabled the option
             // and the image is reasonably large
-            if (!resize) return File.ReadAllBytes(imagePath);
+
+            if (Path.GetExtension(imagePath).ToLower() == ".webp") return File.ReadAllBytes(imagePath);
+
+            else if (!resize) return ConvertImageToBytes(GetImage(imagePath));
+
             try
             {
-                using (var bmp = new Bitmap(imagePath))
+                using (var image = GetImage(imagePath))
                 {
-                    if (ShouldResize(bmp.Size, out var newSize))
+                    if (ShouldResize(image.Size, out var newSize))
                     {
                         using (var newBmp = new Bitmap(newSize.Width, newSize.Height))
                         {
                             using (var g = Graphics.FromImage(newBmp))
-                            {
-                                g.DrawImage(bmp, new Rectangle(0, 0, newSize.Width, newSize.Height));
-                            }
+                                g.DrawImage(image, new Rectangle(0, 0, newSize.Width, newSize.Height));
 
                             // Save as JPEG (format doesn't have to match file extension,
                             // Google will take care of figuring out the correct format)
@@ -93,6 +95,42 @@ namespace GoogleImageShell
             // just load the bytes from disk directly
             return File.ReadAllBytes(imagePath);
         }
+
+        private static byte[] ConvertImageToBytes(Bitmap bitmap)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                bitmap.Save(memoryStream, ImageFormat.Jpeg);
+                return memoryStream.ToArray();
+            }
+        }
+
+        private static Bitmap GetImage(string imagePath)
+        {
+            if (Path.GetExtension(imagePath).ToLower() == ".ico")
+            {
+                return new IconEx(imagePath).FindIcon(IconEx.DisplayType.Largest).ToBitmap();
+            }
+            else if (Path.GetExtension(imagePath).ToLower() == ".tiff" ||
+                     Path.GetExtension(imagePath).ToLower() == ".tif")
+            {
+                using (Image image = Image.FromFile(imagePath))
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, ImageFormat.Jpeg);
+                        byte[] imageBytes = m.ToArray();
+                        return (Bitmap)Image.FromStream(m);
+                    }
+                }
+            }
+            else
+            {
+                return new Bitmap(imagePath);
+            }
+        }
+
+
         /// <summary>
         /// Asynchronously uploads the specified image to Google Images,
         /// and returns the URL of the results page.
@@ -118,7 +156,7 @@ namespace GoogleImageShell
             // Configure the HTTP client to prevent auto-redirects
             var handler = new HttpClientHandler();
             handler.AllowAutoRedirect = false;
-            
+
             // Create the multipart form data with the image data and other required fields
             using (var client = new HttpClient(handler))
             {

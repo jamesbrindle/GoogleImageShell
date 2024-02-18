@@ -5,6 +5,10 @@
         JPG,
         GIF,
         PNG,
-        BMP
+        BMP,
+        TIFF,
+        WEBP,
+        WMF,
+        ICO
     }
 }
