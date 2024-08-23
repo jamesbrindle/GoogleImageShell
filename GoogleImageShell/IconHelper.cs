@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Experimental.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -144,7 +145,7 @@ namespace GoogleImageShell
         {
             try
             {
-                var icoFile = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                var icoFile = LongPathFile.Open(filename, FileMode.Open, FileAccess.Read);
                 var icoArray = new byte[icoFile.Length];
                 icoFile.Read(icoArray, 0, (int)icoFile.Length);
                 icoStream = new MemoryStream(icoArray);

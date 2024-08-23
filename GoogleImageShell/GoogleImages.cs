@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Experimental.IO;
 
 namespace GoogleImageShell
 {
@@ -59,7 +60,7 @@ namespace GoogleImageShell
             // Resize the image if user enabled the option
             // and the image is reasonably large
 
-            if (Path.GetExtension(imagePath).ToLower() == ".webp") return File.ReadAllBytes(imagePath);
+            if (Path.GetExtension(imagePath).ToLower() == ".webp") return LongPathFile.ReadAllBytes(imagePath);
 
             else if (!resize) return ConvertImageToBytes(GetImage(imagePath));
 
@@ -93,7 +94,7 @@ namespace GoogleImageShell
 
             // No resizing required or image is too small,
             // just load the bytes from disk directly
-            return File.ReadAllBytes(imagePath);
+            return LongPathFile.ReadAllBytes(imagePath);
         }
 
         private static byte[] ConvertImageToBytes(Bitmap bitmap)
@@ -114,13 +115,16 @@ namespace GoogleImageShell
             else if (Path.GetExtension(imagePath).ToLower() == ".tiff" ||
                      Path.GetExtension(imagePath).ToLower() == ".tif")
             {
-                using (Image image = Image.FromFile(imagePath))
+                using (var readStream = LongPathFile.OpenRead(imagePath))
                 {
-                    using (MemoryStream m = new MemoryStream())
+                    using (Image image = Image.FromStream(readStream))
                     {
-                        image.Save(m, ImageFormat.Jpeg);
-                        byte[] imageBytes = m.ToArray();
-                        return (Bitmap)Image.FromStream(m);
+                        using (MemoryStream m = new MemoryStream())
+                        {
+                            image.Save(m, ImageFormat.Jpeg);
+                            byte[] imageBytes = m.ToArray();
+                            return (Bitmap)Image.FromStream(m);
+                        }
                     }
                 }
             }

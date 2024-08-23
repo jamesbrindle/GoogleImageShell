@@ -72,6 +72,7 @@
     <Compile Include="GoogleImages.cs" />
     <Compile Include="IconHelper.cs" />
     <Compile Include="ImageFileType.cs" />
+    <Compile Include="LongPathHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShortcutMenu.cs" />
@@ -96,6 +97,9 @@
     <EmbeddedResource Include="UploadForm.resx">
       <DependentUpon>UploadForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
